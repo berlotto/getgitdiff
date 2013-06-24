@@ -17,4 +17,5 @@ Options:
                         Where is the git repository
   -t TODIR, --todir=TODIR
                         Directory to copy the files
+  -s, --onlyshow        Only show the diff files, and no copy
 </pre>
