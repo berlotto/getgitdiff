@@ -17,6 +17,8 @@ parser.add_option('-d', '--directory', dest='work_dir',
         help="Where is the git repository", default='.')
 parser.add_option('-t', '--todir', dest="todir",
         help="Directory to copy the files", default=def_dir)
+parser.add_option('-s', '--onlyshow', dest="docopy", action="store_false", 
+        default=True, help="Only show the diff files, and no copy")
 
 (options, args) = parser.parse_args()
 
@@ -58,25 +60,32 @@ if not os.path.isdir(options.todir):
 
 
 print "-"*30
-print 'Copying files above...'
+if options.docopy:
+    print 'Copying files above...'
+else:
+    print "Showing files..."
 
 # import pdb
 # pdb.set_trace()
 
 for strfile in changed_files:
     if not strfile in ignore_files:
-        dstdir =  os.path.join(options.todir, os.path.dirname(strfile))
-        try:
-            os.makedirs(dstdir)
-        except OSError, e:
-            pass
         original = os.path.join(options.work_dir, strfile)
-        print ":", original
-        shutil.copy(original, dstdir)
+        if options.docopy:
+            dstdir =  os.path.join(options.todir, os.path.dirname(strfile))
+            try:
+                os.makedirs(dstdir)
+            except OSError, e:
+                pass
+            print ":", original
+            shutil.copy(original, dstdir)
+        else:
+            print ":", original
 
 
-print "%(qtd)s files copied to %(todir)s." % {
-    'qtd': str(len(changed_files)),
-    'todir' : options.todir
-}
+if options.docopy:
+    print "%(qtd)s files copied to %(todir)s." % {
+        'qtd': str(len(changed_files)),
+        'todir' : options.todir
+    }
 
