@@ -12,7 +12,7 @@ def_dir = "/tmp/<random_dir>/"
 
 parser = OptionParser()
 parser.add_option('-n', '--number', dest='number',
-        help="How many changes will be treat", default=1)
+        help="How many changes will be treated", default=1)
 parser.add_option('-d', '--directory', dest='work_dir',
         help="Where is the git repository", default='.')
 parser.add_option('-t', '--todir', dest="todir",
