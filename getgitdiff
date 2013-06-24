@@ -5,22 +5,22 @@ from git import *
 import sys
 import os
 import shutil
-from optparse import OptionParser
+import argparse
 from datetime import datetime
 
 def_dir = "/tmp/<random_dir>/"
 
-parser = OptionParser()
-parser.add_option('-n', '--number', dest='number',
+parser = argparse.ArgumentParser()
+parser.add_argument('-n', '--number', dest='number',
         help="How many changes will be treated", default=1)
-parser.add_option('-d', '--directory', dest='work_dir',
+parser.add_argument('-d', '--directory', dest='work_dir',
         help="Where is the git repository", default='.')
-parser.add_option('-t', '--todir', dest="todir",
+parser.add_argument('-t', '--todir', dest="todir",
         help="Directory to copy the files", default=def_dir)
-parser.add_option('-s', '--onlyshow', dest="docopy", action="store_false", 
+parser.add_argument('-s', '--onlyshow', dest="docopy", action="store_false", 
         default=True, help="Only show the diff files, and no copy")
 
-(options, args) = parser.parse_args()
+options = parser.parse_args()
 
 print "Retriving %s commits change on: %s" % (options.number,
         options.work_dir)
@@ -44,7 +44,7 @@ for i,c in commits:
 # print '-'*30
 # print '\n'.join(changed_files)
 
-if options.todir == def_dir:
+if options.todir == def_dir and options.docopy:
     def_name = datetime.now().strftime('%Y%m%d%H%M%S')
     options.todir = '/tmp/%s' % def_name
     try:
@@ -54,7 +54,7 @@ if options.todir == def_dir:
         print "Error trying to create default directory, set -t option."
         exit(-1)
 
-if not os.path.isdir(options.todir):
+if not os.path.isdir(options.todir) and options.docopy:
     print "ERROR: %s ir not a directory!" % options.todir
     exit(-2)
 
